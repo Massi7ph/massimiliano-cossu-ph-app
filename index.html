@@ -52,7 +52,7 @@
 
     <div class="weather-box">
         <div style="font-size:0.55rem; color:#999; letter-spacing:2px; margin-bottom:5px;">IMPERIA, ITALY</div>
-        <div class="temp" id="t">18°C</div>
+        <div class="temp" id="t">--°C</div>
     </div>
 
     <div class="ai-box">
@@ -156,31 +156,4 @@
         } catch(e) { document.getElementById('t').innerText = "18°C"; }
     }
 
-    document.getElementById('b-form').onsubmit = function(e) {
-        e.preventDefault();
-        const b = document.getElementById('s-b');
-        b.innerText = curL === 'it' ? "INVIO..." : "SENDING...";
-        
-        emailjs.send("default_service", "template_ua1pm9l", {
-            from_name: document.getElementById('from_name').value,
-            email: document.getElementById('email').value,
-            phone: document.getElementById('phone').value,
-            room_number: document.getElementById('room_number').value,
-            requested_time: document.getElementById('selected_mood').value,
-            notes: document.getElementById('notes').value
-        }).then(() => {
-            alert(curL === 'it' ? "Richiesta inviata con successo!" : "Request sent successfully!");
-            b.innerText = data[curL].bS;
-            e.target.reset();
-            document.querySelectorAll('.m-btn').forEach(x => x.classList.remove('m-active'));
-        }, (err) => {
-            alert("Errore nell'invio. Riprova più tardi.");
-            b.innerText = data[curL].bS;
-        });
-    };
-
-    getW();
-    setL('it');
-</script>
-</body>
-</html>
+    document.getElementById('
