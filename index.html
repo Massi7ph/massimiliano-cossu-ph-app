@@ -7,34 +7,67 @@
     <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600&display=swap" rel="stylesheet">
     <style>
-        :root { --b: #000; --w: #fff; }
-        body { font-family: 'Montserrat', sans-serif; background: var(--w); color: var(--b); margin: 0; padding: 0; text-align: center; }
+        :root { --b: #000; --w: #fff; --accent: #d4af37; } /* Oro per il tocco lusso */
+        body { font-family: 'Montserrat', sans-serif; background: var(--w); color: var(--b); margin: 0; padding: 0; text-align: center; transition: 0.5s; }
+        
+        /* MODALITÀ NOTTE AUTOMATICA */
+        body.dark-mode { background: #111; color: #eee; }
+        body.dark-mode .ai-box { background: #1a1a1a; border-left-color: var(--accent); }
+        body.dark-mode .m-btn { background: #222; color: #fff; border-color: #333; }
+        body.dark-mode .field { border-bottom-color: #333; color: #fff; background: transparent; }
+
         .container { max-width: 450px; margin: 0 auto; padding: 20px; box-sizing: border-box; }
         .lang-bar { display: flex; justify-content: center; gap: 15px; margin-bottom: 20px; }
         .lang-btn { cursor: pointer; background: none; border: none; font-size: 0.7rem; font-weight: 600; color: #ccc; text-transform: uppercase; }
         .lang-btn.active { color: var(--b); border-bottom: 2px solid var(--b); }
-        .logo { width: 140px; margin: 10px 0; }
-        .brand { letter-spacing: 5px; text-transform: uppercase; font-size: 0.75rem; margin-bottom: 30px; }
-        .weather-box { border-top: 1px solid #eee; border-bottom: 1px solid #eee; padding: 15px 0; margin-bottom: 30px; }
-        .temp { font-size: 2.5rem; font-weight: 200; }
-        .ai-box { text-align: left; padding: 20px; background: #fafafa; border-left: 4px solid var(--b); margin-bottom: 30px; }
-        #display { font-size: 0.85rem; line-height: 1.6; min-height: 60px; margin-bottom: 20px; }
+        body.dark-mode .lang-btn.active { color: var(--accent); border-bottom-color: var(--accent); }
+
+        .logo { width: 120px; margin: 10px 0; filter: grayscale(1); }
+        body.dark-mode .logo { filter: invert(1) grayscale(1); }
+        .brand { letter-spacing: 5px; text-transform: uppercase; font-size: 0.7rem; margin-bottom: 30px; opacity: 0.7; }
+        
+        .weather-box { border-top: 1px solid #eee; border-bottom: 1px solid #eee; padding: 20px 0; margin-bottom: 30px; }
+        body.dark-mode .weather-box { border-color: #222; }
+        #clock { font-size: 0.7rem; letter-spacing: 2px; margin-bottom: 5px; font-weight: 600; }
+        .temp { font-size: 3rem; font-weight: 200; line-height: 1; margin: 10px 0; }
+        #w-desc { font-size: 0.6rem; text-transform: uppercase; color: #666; letter-spacing: 2px; }
+
+        .ai-box { text-align: left; padding: 25px; background: #fafafa; border-left: 3px solid var(--b); margin-bottom: 30px; border-radius: 0 5px 5px 0; }
+        #display { font-size: 0.85rem; line-height: 1.7; min-height: 60px; margin-bottom: 20px; }
+        
         .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px; }
-        .m-btn { background: #fff; border: 1px solid #ddd; padding: 12px; font-size: 0.65rem; text-transform: uppercase; cursor: pointer; font-family: inherit; font-weight: 600; display: flex; align-items: center; justify-content: center; gap: 5px; }
+        .m-btn { background: #fff; border: 1px solid #ddd; padding: 12px; font-size: 0.6rem; text-transform: uppercase; cursor: pointer; font-family: inherit; font-weight: 600; display: flex; align-items: center; justify-content: center; gap: 8px; border-radius: 3px; transition: 0.3s; }
+        .m-btn:hover { border-color: var(--b); background: #f0f0f0; }
+
         .in-wrap { display: flex; gap: 10px; border-top: 1px solid #eee; padding-top: 15px; }
-        input#user-in { flex: 1; border: none; outline: none; background: transparent; font-size: 0.85rem; font-family: inherit; }
-        .field { width: 100%; padding: 15px 0; margin-bottom: 10px; border: none; border-bottom: 1px solid #eee; outline: none; font-family: inherit; box-sizing: border-box; font-size: 0.9rem; }
-        .btn-send { width: 100%; padding: 20px; background: var(--b); color: var(--w); border: none; text-transform: uppercase; letter-spacing: 3px; cursor: pointer; font-weight: 600; margin-top: 20px; }
+        body.dark-mode .in-wrap { border-color: #222; }
+        input#user-in { flex: 1; border: none; outline: none; background: transparent; font-size: 0.9rem; font-family: inherit; color: inherit; }
+        
+        .field { width: 100%; padding: 15px 0; margin-bottom: 15px; border: none; border-bottom: 1px solid #eee; outline: none; font-family: inherit; box-sizing: border-box; font-size: 0.9rem; }
+        .btn-send { width: 100%; padding: 20px; background: var(--b); color: var(--w); border: none; text-transform: uppercase; letter-spacing: 4px; cursor: pointer; font-weight: 600; margin-top: 20px; transition: 0.3s; }
+        body.dark-mode .btn-send { background: var(--accent); color: #000; }
+        
+        /* WHATSAPP FLOAT */
+        .wa-float { position: fixed; bottom: 20px; right: 20px; background: #25d366; color: white; width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center; justify-content: center; text-decoration: none; box-shadow: 0 4px 10px rgba(0,0,0,0.2); z-index: 100; font-size: 22px; }
     </style>
 </head>
-<body>
+<body id="body">
+
 <div class="container">
     <div class="lang-bar">
         <button id="it-btn" class="lang-btn active" onclick="setL('it')">IT</button>
         <button id="en-btn" class="lang-btn" onclick="setL('en')">EN</button>
     </div>
-    <img src="logo.jpg" class="logo"><div class="brand">Massimiliano Cossu</div>
-    <div class="weather-box"><div class="temp" id="t">--°C</div><div id="w-desc" style="font-size:0.6rem; text-transform:uppercase;">...</div></div>
+    
+    <img src="logo.jpg" class="logo">
+    <div class="brand">Massimiliano Cossu</div>
+
+    <div class="weather-box">
+        <div id="clock">00:00:00</div>
+        <div class="temp" id="t">--°C</div>
+        <div id="w-desc">Analisi meteo in corso...</div>
+    </div>
+
     <div class="ai-box">
         <div id="display"></div>
         <div class="grid">
@@ -43,8 +76,12 @@
             <button class="m-btn" onclick="ask(t[cL].q3)" id="btn3"></button>
             <button class="m-btn" onclick="ask(t[cL].q4)" id="btn4"></button>
         </div>
-        <div class="in-wrap"><input type="text" id="user-in"><button onclick="runAI()" style="border:none; background:none; font-weight:600; cursor:pointer;">OK</button></div>
+        <div class="in-wrap">
+            <input type="text" id="user-in" autocomplete="off">
+            <button onclick="runAI()" style="border:none; background:none; font-weight:600; cursor:pointer; color: inherit;">OK</button>
+        </div>
     </div>
+
     <form id="c-form">
         <input type="text" id="fn" class="field" required>
         <input type="email" id="em" class="field" required>
@@ -55,25 +92,42 @@
     </form>
 </div>
 
+<a href="https://wa.me/39XXXXXXXXXX" class="wa-float" target="_blank">✉</a>
+
 <script>
-    // --- CONFIGURAZIONE DATI ---
+    // --- CONFIGURAZIONE ---
     const AK = "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"; 
     emailjs.init("Jlm5ZEzPEoWKBx3ki");
 
     let cL = 'it', curT = "--", curD = "";
+
+    // Controllo Notte Automatica (dalle 19 alle 07)
+    function checkNight() {
+        const hour = new Date().getHours();
+        if (hour >= 19 || hour <= 7) document.getElementById('body').classList.add('dark-mode');
+        else document.getElementById('body').classList.remove('dark-mode');
+    }
+
+    function updateClock() {
+        const now = new Date();
+        document.getElementById('clock').innerText = now.toLocaleTimeString(cL == 'it' ? 'it-IT' : 'en-US');
+    }
+    setInterval(updateClock, 1000);
+    setInterval(checkNight, 60000);
+
     const t = {
         it: {
-            wel: "Ciao! Sono l'assistente di Massimiliano. Come posso aiutarti?",
-            bS: "Invia Richiesta", wait: "Analizzo la luce...", success: "Inviato con successo!", ph: "Scrivi qui...",
-            fn: "NOME E COGNOME", em: "EMAIL", tel: "TELEFONO", rm: "CAMERA / HOTEL", nt: "NOTE", 
-            q1: "Location", q2: "Outfit", q3: "Orario", q4: "Stile",
+            wel: "Ciao! Sono l'assistente digitale di Massimiliano. Come posso esserti utile oggi?",
+            bS: "Invia Richiesta", wait: "Sto scrivendo...", success: "Richiesta inviata! Ti risponderò brevissimo.", ph: "Fai una domanda...",
+            fn: "NOME E COGNOME", em: "EMAIL", tel: "TELEFONO", rm: "CAMERA / HOTEL", nt: "NOTE EXTRA", 
+            q1: "Location", q2: "Outfit", q3: "Orario Gold", q4: "Il Tuo Stile",
             e1: "📍", e2: "👗", e3: "☀️", e4: "📸"
         },
         en: {
-            wel: "Hello! I am Massimiliano's assistant. How can I help you?",
-            bS: "Send Request", wait: "Analyzing light...", success: "Sent successfully!", ph: "Type here...",
-            fn: "FULL NAME", em: "EMAIL", tel: "PHONE", rm: "ROOM / HOTEL", nt: "NOTES", 
-            q1: "Location", q2: "Outfit", q3: "Time", q4: "Style",
+            wel: "Hello! I am Massimiliano's digital assistant. How can I help you today?",
+            bS: "Send Request", wait: "Typing...", success: "Request sent! I will get back to you soon.", ph: "Ask me anything...",
+            fn: "FULL NAME", em: "EMAIL", tel: "PHONE", rm: "ROOM / HOTEL", nt: "EXTRA NOTES", 
+            q1: "Location", q2: "Outfit", q3: "Gold Time", q4: "Your Style",
             e1: "📍", e2: "👗", e3: "☀️", e4: "📸"
         }
     };
@@ -82,7 +136,7 @@
         cL = l;
         document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
         document.getElementById(l+'-btn').classList.add('active');
-        document.getElementById('display').innerHTML = t[l].wel;
+        typeEffect(document.getElementById('display'), t[l].wel);
         document.getElementById('sb').innerText = t[l].bS;
         document.getElementById('user-in').placeholder = t[l].ph;
         document.getElementById('fn').placeholder = t[l].fn;
@@ -90,13 +144,22 @@
         document.getElementById('ph').placeholder = t[l].tel;
         document.getElementById('rn').placeholder = t[l].rm;
         document.getElementById('nt').placeholder = t[l].nt;
-        
-        // Assegnazione testo + emoticon ai bottoni
         document.getElementById('btn1').innerHTML = t[l].e1 + " " + t[l].q1;
         document.getElementById('btn2').innerHTML = t[l].e2 + " " + t[l].q2;
         document.getElementById('btn3').innerHTML = t[l].e3 + " " + t[l].q3;
         document.getElementById('btn4').innerHTML = t[l].e4 + " " + t[l].q4;
-        getW();
+        getW(); updateClock(); checkNight();
+    }
+
+    // Effetto scrittura
+    function typeEffect(element, text) {
+        element.innerHTML = "<strong>AI:</strong> ";
+        let i = 0;
+        let interval = setInterval(() => {
+            element.innerHTML += text.charAt(i);
+            i++;
+            if (i > text.length) clearInterval(interval);
+        }, 20);
     }
 
     async function getW() {
@@ -109,17 +172,18 @@
 
     async function runAI() {
         const i = document.getElementById('user-in'), d = document.getElementById('display');
-        if(!i.value) return; const txt = i.value; i.value = ""; d.innerHTML = t[cL].wait;
+        if(!i.value) return; const txt = i.value; i.value = ""; d.innerHTML = "<strong>AI:</strong> " + t[cL].wait;
         try {
             const r = await fetch("https://api.openai.com/v1/chat/completions", {
                 method: "POST", headers: { "Content-Type": "application/json", "Authorization": `Bearer ${AK}` },
                 body: JSON.stringify({ 
                     model: "gpt-4o-mini", 
-                    messages: [{ role: "system", content: `Sei l'AI di Massimiliano Cossu, fotografo a Imperia. Meteo: ${curT}, ${curD}. Rispondi in ${cL}. Se piove consiglia i Portici, se sole il Parrasio. Breve.` }, { role: "user", content: txt }] 
+                    messages: [{ role: "system", content: `Sei l'AI di Massimiliano Cossu, fotografo a Imperia. Meteo: ${curT}, ${curD}. Ora: ${new Date().toLocaleTimeString()}. Rispondi in ${cL}. Se piove consiglia i Portici, se sole il Parrasio. Breve e professionale.` }, { role: "user", content: txt }] 
                 })
             });
-            const res = await r.json(); d.innerHTML = res.choices[0].message.content;
-        } catch(e) { d.innerHTML = "Error AI. Check API Key."; }
+            const res = await r.json(); 
+            typeEffect(d, res.choices[0].message.content);
+        } catch(e) { d.innerHTML = "Error AI."; }
     }
 
     function ask(q) { document.getElementById('user-in').value = q; runAI(); }
@@ -128,7 +192,6 @@
         e.preventDefault(); 
         const b = document.getElementById('sb'); 
         b.innerText = "..."; b.disabled = true;
-
         emailjs.send("service_p8nu1jg", "template_ua1pm9l", {
             from_name: document.getElementById('fn').value, 
             email: document.getElementById('em').value,
@@ -138,8 +201,7 @@
         }).then(() => { 
             alert(t[cL].success); location.reload(); 
         }).catch((err) => { 
-            alert("Errore invio: " + JSON.stringify(err)); 
-            b.innerText = t[cL].bS; b.disabled = false; 
+            alert("Errore invio."); b.innerText = t[cL].bS; b.disabled = false; 
         });
     };
     setL('it');
