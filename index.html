@@ -20,7 +20,7 @@
         .ai-box { text-align: left; padding: 20px; background: #fafafa; border-left: 4px solid var(--b); margin-bottom: 30px; }
         #display { font-size: 0.85rem; line-height: 1.6; min-height: 60px; margin-bottom: 20px; }
         .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px; }
-        .m-btn { background: #fff; border: 1px solid #ddd; padding: 12px; font-size: 0.6rem; text-transform: uppercase; cursor: pointer; font-family: inherit; font-weight: 600; }
+        .m-btn { background: #fff; border: 1px solid #ddd; padding: 12px; font-size: 0.65rem; text-transform: uppercase; cursor: pointer; font-family: inherit; font-weight: 600; display: flex; align-items: center; justify-content: center; gap: 5px; }
         .in-wrap { display: flex; gap: 10px; border-top: 1px solid #eee; padding-top: 15px; }
         input#user-in { flex: 1; border: none; outline: none; background: transparent; font-size: 0.85rem; font-family: inherit; }
         .field { width: 100%; padding: 15px 0; margin-bottom: 10px; border: none; border-bottom: 1px solid #eee; outline: none; font-family: inherit; box-sizing: border-box; font-size: 0.9rem; }
@@ -56,8 +56,8 @@
 </div>
 
 <script>
-    // --- CONFIGURAZIONE ---
-    const AK = "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"; // Riga 118
+    // --- CONFIGURAZIONE DATI ---
+    const AK = "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"; 
     emailjs.init("Jlm5ZEzPEoWKBx3ki");
 
     let cL = 'it', curT = "--", curD = "";
@@ -66,13 +66,15 @@
             wel: "Ciao! Sono l'assistente di Massimiliano. Come posso aiutarti?",
             bS: "Invia Richiesta", wait: "Analizzo la luce...", success: "Inviato con successo!", ph: "Scrivi qui...",
             fn: "NOME E COGNOME", em: "EMAIL", tel: "TELEFONO", rm: "CAMERA / HOTEL", nt: "NOTE", 
-            q1: "Location ideale", q2: "Outfit consigliato", q3: "Orario migliore", q4: "Il tuo stile"
+            q1: "Location", q2: "Outfit", q3: "Orario", q4: "Stile",
+            e1: "📍", e2: "👗", e3: "☀️", e4: "📸"
         },
         en: {
             wel: "Hello! I am Massimiliano's assistant. How can I help you?",
             bS: "Send Request", wait: "Analyzing light...", success: "Sent successfully!", ph: "Type here...",
             fn: "FULL NAME", em: "EMAIL", tel: "PHONE", rm: "ROOM / HOTEL", nt: "NOTES", 
-            q1: "Ideal location", q2: "Recommended outfit", q3: "Best time", q4: "Your style"
+            q1: "Location", q2: "Outfit", q3: "Time", q4: "Style",
+            e1: "📍", e2: "👗", e3: "☀️", e4: "📸"
         }
     };
 
@@ -88,7 +90,12 @@
         document.getElementById('ph').placeholder = t[l].tel;
         document.getElementById('rn').placeholder = t[l].rm;
         document.getElementById('nt').placeholder = t[l].nt;
-        ['btn1','btn2','btn3','btn4'].forEach((id, i) => document.getElementById(id).innerText = t[l]['q'+(i+1)]);
+        
+        // Assegnazione testo + emoticon ai bottoni
+        document.getElementById('btn1').innerHTML = t[l].e1 + " " + t[l].q1;
+        document.getElementById('btn2').innerHTML = t[l].e2 + " " + t[l].q2;
+        document.getElementById('btn3').innerHTML = t[l].e3 + " " + t[l].q3;
+        document.getElementById('btn4').innerHTML = t[l].e4 + " " + t[l].q4;
         getW();
     }
 
@@ -108,7 +115,7 @@
                 method: "POST", headers: { "Content-Type": "application/json", "Authorization": `Bearer ${AK}` },
                 body: JSON.stringify({ 
                     model: "gpt-4o-mini", 
-                    messages: [{ role: "system", content: `Sei l'AI di Massimiliano Cossu, fotografo a Imperia. Meteo: ${curT}, ${curD}. Rispondi in ${cL}. Se piove consiglia i Portici, se sole il Parrasio. Elegante e breve.` }, { role: "user", content: txt }] 
+                    messages: [{ role: "system", content: `Sei l'AI di Massimiliano Cossu, fotografo a Imperia. Meteo: ${curT}, ${curD}. Rispondi in ${cL}. Se piove consiglia i Portici, se sole il Parrasio. Breve.` }, { role: "user", content: txt }] 
                 })
             });
             const res = await r.json(); d.innerHTML = res.choices[0].message.content;
@@ -121,7 +128,8 @@
         e.preventDefault(); 
         const b = document.getElementById('sb'); 
         b.innerText = "..."; b.disabled = true;
-        emailjs.send("service_p8nu1jg", "template_liqxtir", {
+
+        emailjs.send("service_p8nu1jg", "template_ua1pm9l", {
             from_name: document.getElementById('fn').value, 
             email: document.getElementById('em').value,
             phone: document.getElementById('ph').value, 
@@ -130,7 +138,8 @@
         }).then(() => { 
             alert(t[cL].success); location.reload(); 
         }).catch((err) => { 
-            alert("EmailJS Error: " + err.text); b.innerText = t[cL].bS; b.disabled = false; 
+            alert("Errore invio: " + JSON.stringify(err)); 
+            b.innerText = t[cL].bS; b.disabled = false; 
         });
     };
     setL('it');
