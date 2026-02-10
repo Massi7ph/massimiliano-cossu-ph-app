@@ -3,51 +3,59 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Massimiliano Cossu | AI Concierge</title>
+    <title>Massimiliano Cossu | AI Photo Concierge</title>
     <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600&display=swap" rel="stylesheet">
     <style>
         :root { --b: #000; --w: #fff; --g: #f4f4f4; }
         body { font-family: 'Montserrat', sans-serif; background: var(--w); color: var(--b); margin: 0; padding: 0; text-align: center; }
-        .container { max-width: 450px; margin: 0 auto; padding: 20px; }
+        .container { max-width: 450px; margin: 0 auto; padding: 20px; box-sizing: border-box; }
+        
         .lang-bar { display: flex; justify-content: center; gap: 15px; margin-bottom: 20px; padding: 10px; background: var(--g); border-radius: 50px; }
-        .lang-btn { cursor: pointer; background: none; border: none; font-size: 0.7rem; font-weight: 600; color: #999; }
+        .lang-btn { cursor: pointer; background: none; border: none; font-size: 0.7rem; font-weight: 600; color: #999; text-transform: uppercase; }
         .lang-btn.active { color: var(--b); border-bottom: 2px solid var(--b); }
-        .logo { width: 150px; margin: 20px 0 10px; }
+
+        .logo { width: 140px; margin: 20px 0 10px; }
         .brand { letter-spacing: 5px; text-transform: uppercase; font-size: 0.75rem; margin-bottom: 30px; }
+
         .weather-box { border-top: 1px solid #eee; border-bottom: 1px solid #eee; padding: 15px 0; margin-bottom: 30px; }
-        .temp { font-size: 2.5rem; font-weight: 200; }
-        .ai-box { text-align: left; padding: 20px; background: #fafafa; border-left: 4px solid var(--b); margin-bottom: 30px; }
-        #display { font-size: 0.9rem; line-height: 1.6; min-height: 60px; margin-bottom: 20px; }
+        .temp { font-size: 2.8rem; font-weight: 200; }
+
+        .ai-box { text-align: left; padding: 20px; background: #fafafa; border-left: 4px solid var(--b); margin-bottom: 30px; box-shadow: 0 4px 12px rgba(0,0,0,0.03); }
+        #display { font-size: 0.9rem; line-height: 1.6; min-height: 60px; margin-bottom: 20px; font-weight: 300; }
+
         .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px; }
-        .m-btn { background: #fff; border: 1px solid #ddd; padding: 12px; font-size: 0.6rem; text-transform: uppercase; cursor: pointer; }
-        .m-active { background: var(--b) !important; color: var(--w) !important; }
+        .m-btn { background: #fff; border: 1px solid #ddd; padding: 12px; font-size: 0.6rem; text-transform: uppercase; cursor: pointer; transition: 0.3s; }
+        .m-active { background: var(--b) !important; color: var(--w) !important; border-color: var(--b) !important; }
+
         .in-wrap { display: flex; gap: 10px; border-top: 1px solid #eee; padding-top: 15px; }
-        input#user-in { flex: 1; border: none; outline: none; background: transparent; font-size: 0.85rem; }
+        input#user-in { flex: 1; border: none; outline: none; background: transparent; font-family: inherit; font-size: 0.85rem; }
+        
         .f-title { font-size: 0.75rem; font-weight: 600; letter-spacing: 3px; margin: 30px 0 20px; text-transform: uppercase; }
-        input.field { width: 100%; padding: 15px 0; margin-bottom: 15px; border: none; border-bottom: 1px solid #eee; outline: none; font-family: inherit; }
-        .btn-send { width: 100%; padding: 20px; background: var(--b); color: var(--w); border: none; text-transform: uppercase; letter-spacing: 3px; cursor: pointer; margin-top: 10px; }
-        footer { margin-top: 40px; font-size: 0.5rem; color: #ccc; letter-spacing: 2px; }
+        input.field { width: 100%; padding: 15px 0; margin-bottom: 15px; border: none; border-bottom: 1px solid #eee; outline: none; font-family: inherit; font-size: 0.9rem; }
+        .btn-send { width: 100%; padding: 20px; background: var(--b); color: var(--w); border: none; text-transform: uppercase; letter-spacing: 3px; cursor: pointer; font-size: 0.8rem; margin-top: 10px; }
+        
+        footer { margin-top: 50px; font-size: 0.5rem; color: #ccc; letter-spacing: 2px; text-transform: uppercase; padding-bottom: 20px; }
     </style>
 </head>
 <body>
 
 <div class="container">
     <div class="lang-bar">
-        <button id="it-btn" class="lang-btn active" onclick="setL('it')">ITALIANO</button>
-        <button id="en-btn" class="lang-btn" onclick="setL('en')">ENGLISH</button>
+        <button id="it-btn" class="lang-btn active" onclick="setL('it')">Italiano</button>
+        <button id="en-btn" class="lang-btn" onclick="setL('en')">English</button>
     </div>
 
     <img src="logo.jpg" class="logo" alt="Massimiliano Cossu">
     <div class="brand">Massimiliano Cossu</div>
 
     <div class="weather-box">
-        <div style="font-size:0.5rem; color:#999; letter-spacing:2px;">IMPERIA, ITALY</div>
-        <div class="temp" id="t">18°C</div>
+        <div style="font-size:0.55rem; color:#999; letter-spacing:2px; margin-bottom:5px;">IMPERIA, ITALY</div>
+        <div class="temp" id="t">--°C</div>
     </div>
 
     <div class="ai-box">
-        <div id="display">Benvenuto. Scegli una categoria o fammi una domanda...</div>
+        <div id="display">Benvenuto. Scegli una categoria o chiedimi consiglio su abiti e orari...</div>
         <div class="grid">
             <button class="m-btn" onclick="setM('Romantico', this)" id="m1">🌹 Romantico</button>
             <button class="m-btn" onclick="setM('Editoriale', this)" id="m2">🧥 Editoriale</button>
@@ -55,18 +63,18 @@
             <button class="m-btn" onclick="setM('Family', this)" id="m4">👨‍👩‍👧 Family</button>
         </div>
         <div class="in-wrap">
-            <input type="text" id="user-in" placeholder="Abiti, orari...">
-            <button onclick="runAI()" style="border:none; background:none; font-weight:600; cursor:pointer;">OK</button>
+            <input type="text" id="user-in" placeholder="Chiedi all'AI (es. cosa mi metto?)...">
+            <button onclick="runAI()" style="border:none; background:none; font-weight:600; cursor:pointer; font-size:0.7rem;">OK</button>
         </div>
     </div>
 
-    <div class="f-title" id="f-t">Richiedi Sessione</div>
+    <div class="f-title" id="f-t">Richiedi Disponibilità</div>
     <form id="b-form">
-        <input type="text" id="name" class="field" placeholder="NOME E COGNOME" required>
-        <input type="email" id="email" class="field" placeholder="EMAIL" required>
+        <input type="text" id="from_name" class="field" placeholder="NOME E COGNOME" required>
+        <input type="email" id="email" class="field" placeholder="TUA EMAIL" required>
         <input type="tel" id="phone" class="field" placeholder="TELEFONO" required>
-        <input type="text" id="room" class="field" placeholder="CAMERA / HOTEL" required>
-        <input type="hidden" id="h-m" value="None">
+        <input type="text" id="room_number" class="field" placeholder="NUMERO CAMERA / HOTEL" required>
+        <input type="hidden" id="selected_mood" value="Non specificato">
         <button type="submit" class="btn-send" id="s-b">Invia Richiesta</button>
     </form>
     
@@ -79,31 +87,31 @@
 
     const data = {
         it: {
-            wel: "Meteo analizzato. Scegli una categoria o chiedimi consiglio.",
-            fT: "Richiedi Sessione", bS: "Invia Richiesta", ph: "Abiti, orari...",
+            wel: "Meteo analizzato. Scegli una categoria o chiedimi consiglio su abiti e orari.",
+            fT: "Richiedi Disponibilità", bS: "Invia Richiesta", ph: "Chiedi su abiti, orari...",
             ms: ["🌹 Romantico", "🧥 Editoriale", "📸 Spontaneo", "👨‍👩‍👧 Family"],
             re: {
-                Romantico: "🌹 <strong>AI:</strong> Il Parrasio è perfetto al tramonto.",
-                Editoriale: "🧥 <strong>AI:</strong> Suggerisco i Portici di Oneglia.",
-                Spontaneo: "📸 <strong>AI:</strong> Porto Maurizio per scatti naturali.",
-                Family: "👨‍👩‍👧 <strong>AI:</strong> Borgo Foce è l'ideale per i bambini.",
-                v: "<strong>AI:</strong> Consiglio lino e colori neutri.",
-                o: "<strong>AI:</strong> La Golden Hour è il momento magico.",
-                def: "<strong>AI:</strong> Ottima domanda! Chiedilo a Massimiliano qui sotto."
+                Romantico: "🌹 <strong>AI:</strong> Il Parrasio è perfetto al tramonto. Luci calde e sguardi complici.",
+                Editoriale: "🧥 <strong>AI:</strong> Suggerisco i Portici di Oneglia per un look sofisticato.",
+                Spontaneo: "📸 <strong>AI:</strong> Porto Maurizio è l'ideale per scatti naturali e dinamici.",
+                Family: "👨‍👩‍👧 <strong>AI:</strong> Borgo Foce offre spazio e colori perfetti per i bambini.",
+                v: "<strong>AI:</strong> Consiglio lino, cotone e colori neutri (beige, bianco, carta da zucchero).",
+                o: "<strong>AI:</strong> La Golden Hour (un'ora prima del tramonto) è il momento magico per la luce.",
+                def: "<strong>AI:</strong> Ottima domanda! Chiedilo a Massimiliano inviando il modulo qui sotto."
             }
         },
         en: {
-            wel: "Weather analyzed. Choose a category or ask for advice.",
-            fT: "Book Session", bS: "Send Request", ph: "Outfits, times...",
+            wel: "Weather analyzed. Choose a category or ask for advice on outfits and times.",
+            fT: "Request Availability", bS: "Send Request", ph: "Ask about outfits, times...",
             ms: ["🌹 Romantic", "🧥 Editorial", "📸 Spontaneous", "👨‍👩‍👧 Family"],
             re: {
-                Romantico: "🌹 <strong>AI:</strong> Parrasio is perfect at sunset.",
-                Editoriale: "🧥 <strong>AI:</strong> I suggest Oneglia's Arches.",
-                Spontaneo: "📸 <strong>AI:</strong> Porto Maurizio for natural shots.",
-                Family: "👨‍👩‍👧 <strong>AI:</strong> Borgo Foce is ideal for families.",
-                v: "<strong>AI:</strong> I recommend linen and neutral colors.",
-                o: "<strong>AI:</strong> Golden Hour is the magic moment.",
-                def: "<strong>AI:</strong> Great question! Ask Massimiliano below."
+                Romantico: "🌹 <strong>AI:</strong> Parrasio is perfect at sunset. Warm lights and intimate looks.",
+                Editoriale: "🧥 <strong>AI:</strong> I suggest Oneglia's Arches for a sophisticated look.",
+                Spontaneo: "📸 <strong>AI:</strong> Porto Maurizio is ideal for natural and dynamic shots.",
+                Family: "👨‍👩‍👧 <strong>AI:</strong> Borgo Foce offers perfect space and colors for families.",
+                v: "<strong>AI:</strong> I recommend linen, cotton and neutral colors (beige, white, dusty blue).",
+                o: "<strong>AI:</strong> Golden Hour (one hour before sunset) is the magic moment for light.",
+                def: "<strong>AI:</strong> Great question! Ask Massimiliano by sending the form below."
             }
         }
     };
@@ -122,44 +130,44 @@
     function setM(m, b) {
         document.querySelectorAll('.m-btn').forEach(x => x.classList.remove('m-active'));
         b.classList.add('m-active');
-        document.getElementById('h-m').value = m;
+        document.getElementById('selected_mood').value = m;
         document.getElementById('display').innerHTML = data[curL].re[m];
     }
 
     function runAI() {
         const i = document.getElementById('user-in').value.toLowerCase();
         let r = data[curL].re.def;
-        if(i.includes("vest") || i.includes("wear") || i.includes("abiti")) r = data[curL].re.v;
-        if(i.includes("ora") || i.includes("time") || i.includes("quando")) r = data[curL].re.o;
-        document.getElementById('display').innerHTML = `<div><strong>You:</strong> ${i}</div><div>${r}</div>`;
+        if(i.includes("vest") || i.includes("wear") || i.includes("abiti") || i.includes("metto")) r = data[curL].re.v;
+        if(i.includes("ora") || i.includes("time") || i.includes("quando") || i.includes("hour")) r = data[curL].re.o;
+        document.getElementById('display').innerHTML = `<div><strong>You:</strong> ${i}</div><div style="margin-top:8px">${r}</div>`;
         document.getElementById('user-in').value = "";
     }
 
     async function getW() {
         try {
-            const r = await fetch('https://api.openweathermap.org/data/2.5/weather?q=Imperia&appid=f1cdab2eef339087f342360bdd4958cf&units=metric');
+            const r = await fetch('https://api.openweathermap.org/data/2.5/weather?q=Imperia,IT&appid=f1cdab2eef339087f342360bdd4958cf&units=metric');
             const d = await r.json();
             if(d.main) document.getElementById('t').innerText = Math.round(d.main.temp) + "°C";
-        } catch(e) { }
+        } catch(e) { document.getElementById('t').innerText = "18°C"; }
     }
 
     document.getElementById('b-form').onsubmit = function(e) {
         e.preventDefault();
         const b = document.getElementById('s-b');
-        b.innerText = "...";
+        b.innerText = curL === 'it' ? "INVIO..." : "SENDING...";
         
         emailjs.send("default_service", "template_ua1pm9l", {
-            from_name: document.getElementById('name').value,
-            client_email: document.getElementById('email').value,
-            client_phone: document.getElementById('phone').value,
-            room_number: document.getElementById('room').value,
-            mood: document.getElementById('h-m').value
+            from_name: document.getElementById('from_name').value,
+            email: document.getElementById('email').value,
+            phone: document.getElementById('phone').value,
+            room_number: document.getElementById('room_number').value,
+            requested_time: document.getElementById('selected_mood').value
         }).then(() => {
-            alert(curL === 'it' ? "Richiesta inviata!" : "Request sent!");
+            alert(curL === 'it' ? "Richiesta inviata con successo!" : "Request sent successfully!");
             b.innerText = data[curL].bS;
             e.target.reset();
         }, (err) => {
-            alert("Errore invio. Riprova.");
+            alert("Errore nell'invio. Riprova più tardi.");
             b.innerText = data[curL].bS;
         });
     };
