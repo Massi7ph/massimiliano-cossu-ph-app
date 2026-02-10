@@ -3,160 +3,146 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Massimiliano Cossu | Photography</title>
+    <title>Massimiliano Cossu | AI Concierge</title>
     <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Montserrat', sans-serif; text-align: center; margin: 0; padding: 20px; color: #000; }
-        .container { max-width: 500px; margin: 0 auto; }
-        h1 { font-size: 1rem; letter-spacing: 4px; text-transform: uppercase; margin-bottom: 40px; }
-        
-        /* BOX METEO */
-        .weather { padding: 20px; border-top: 1px solid #ddd; border-bottom: 1px solid #ddd; margin-bottom: 30px; }
-        .temp { font-size: 3rem; font-weight: 300; margin: 10px 0; }
-        
-        /* BOX AI */
-        .chat-box { background: #f9f9f9; padding: 20px; border-radius: 8px; text-align: left; margin-bottom: 30px; }
-        #ai-response { font-size: 0.9rem; line-height: 1.5; min-height: 60px; margin-bottom: 15px; }
-        .input-group { display: flex; gap: 10px; }
-        input[type="text"] { flex: 1; padding: 10px; border: 1px solid #ccc; border-radius: 4px; }
-        button.ask-btn { padding: 10px 20px; background: #000; color: #fff; border: none; cursor: pointer; }
-        
-        /* FORM CONTATTI */
-        .form-title { font-size: 0.8rem; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 20px; font-weight: 600; }
-        input.field, textarea.field { width: 100%; padding: 15px; margin-bottom: 10px; border: 1px solid #eee; box-sizing: border-box; }
-        button.send-btn { width: 100%; padding: 15px; background: #000; color: #fff; border: none; text-transform: uppercase; letter-spacing: 2px; cursor: pointer; }
+        body { font-family: 'Montserrat', sans-serif; background: #fff; color: #000; margin: 0; padding: 0; text-align: center; }
+        .container { max-width: 450px; margin: 0 auto; padding: 20px; }
+        .logo { width: 140px; margin: 20px 0 10px; }
+        .brand { letter-spacing: 5px; text-transform: uppercase; font-size: 0.75rem; margin-bottom: 30px; }
+        .weather-box { border-top: 1px solid #eee; border-bottom: 1px solid #eee; padding: 15px 0; margin-bottom: 20px; }
+        .temp { font-size: 2.5rem; font-weight: 200; }
+        #w-desc { font-size: 0.7rem; text-transform: uppercase; color: #666; letter-spacing: 1px; }
+        .ai-box { text-align: left; padding: 20px; background: #fafafa; border-left: 4px solid #000; margin-bottom: 30px; border-radius: 4px; }
+        #display { font-size: 0.9rem; line-height: 1.6; min-height: 60px; margin-bottom: 15px; color: #333; }
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 15px; }
+        .m-btn { background: #fff; border: 1px solid #ddd; padding: 12px; font-size: 0.65rem; text-transform: uppercase; cursor: pointer; font-family: inherit; font-weight: 600; }
+        .input-group { display: flex; gap: 10px; border-top: 1px solid #eee; padding-top: 15px; }
+        input#user-in { flex: 1; border: none; outline: none; background: transparent; font-family: inherit; font-size: 0.9rem; }
+        button#ai-btn { border: none; background: #000; color: #fff; padding: 10px 20px; font-weight: 600; cursor: pointer; text-transform: uppercase; font-size: 0.7rem; }
+        .f-title { font-size: 0.8rem; font-weight: 600; letter-spacing: 3px; margin: 40px 0 20px; text-transform: uppercase; }
+        .field { width: 100%; padding: 15px; margin-bottom: 10px; border: 1px solid #eee; outline: none; font-family: inherit; font-size: 0.85rem; box-sizing: border-box; background: #fdfdfd; }
+        .btn-send { width: 100%; padding: 18px; background: #000; color: #fff; border: none; text-transform: uppercase; letter-spacing: 3px; cursor: pointer; font-weight: 600; margin-top: 10px; }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h1>Massimiliano Cossu</h1>
+    <img src="logo.jpg" class="logo">
+    <div class="brand">Massimiliano Cossu</div>
 
-    <div class="weather">
-        <div style="font-size: 0.7rem; color: #888;">IMPERIA, OGGI</div>
-        <div class="temp" id="temp">--°C</div>
-        <div id="desc" style="text-transform: uppercase; font-size: 0.7rem;">Caricamento...</div>
+    <div class="weather-box">
+        <div style="font-size:0.5rem; color:#999; letter-spacing:2px; margin-bottom:5px;">IMPERIA, RIVIERA</div>
+        <div class="temp" id="t">--°C</div>
+        <div id="w-desc">Analisi meteo...</div>
     </div>
 
-    <div class="chat-box">
-        <div id="ai-response"><strong>AI:</strong> Ciao, sono l'assistente virtuale. Chiedimi un consiglio su location o outfit in base al meteo di oggi!</div>
+    <div class="ai-box">
+        <div id="display"><strong>AI:</strong> Ciao! Sono il concierge digitale. Scegli un'opzione o scrivimi per consigli su luce e location.</div>
+        <div class="grid">
+            <button class="m-btn" onclick="ask('Qual è il posto migliore per scattare oggi?')">📍 Location Top</button>
+            <button class="m-btn" onclick="ask('Che outfit mi consigli con questo meteo?')">👗 Outfit & Luce</button>
+            <button class="m-btn" onclick="ask('A che ora la luce è migliore oggi?')">☀️ Orario Gold</button>
+            <button class="m-btn" onclick="ask('Descrivi il tuo stile fotografico')">📸 Il Tuo Stile</button>
+        </div>
         <div class="input-group">
-            <input type="text" id="question" placeholder="Es: Che outfit consigli oggi?">
-            <button class="ask-btn" onclick="inviaDomanda()">INVIA</button>
+            <input type="text" id="user-in" placeholder="Chiedimi qualcosa...">
+            <button id="ai-btn" onclick="runAI()">INVIA</button>
         </div>
     </div>
 
-    <div class="form-title">Richiedi Disponibilità</div>
+    <div class="f-title">Richiedi Disponibilità</div>
     <form id="contact-form">
-        <input type="text" id="fn" class="field" placeholder="NOME" required>
+        <input type="text" id="fn" class="field" placeholder="NOME E COGNOME" required>
         <input type="email" id="em" class="field" placeholder="EMAIL" required>
         <input type="tel" id="ph" class="field" placeholder="TELEFONO" required>
-        <input type="text" id="rn" class="field" placeholder="HOTEL / CAMERA">
-        <textarea id="nt" class="field" placeholder="NOTE" style="height: 80px;"></textarea>
-        <button type="submit" class="send-btn" id="sb">INVIA RICHIESTA</button>
+        <input type="text" id="rn" class="field" placeholder="CAMERA / HOTEL" required>
+        <textarea id="nt" class="field" style="height:80px; resize:none;" placeholder="NOTE"></textarea>
+        <button type="submit" class="btn-send" id="sb">INVIA RICHIESTA</button>
     </form>
 </div>
 
 <script>
-    // --- 1. CONFIGURAZIONE ---
-    // INCOLLA QUI LA TUA NUOVA CHIAVE API (Mantieni le virgolette!)
+    // --- CONFIGURAZIONE ---
+    // Ricorda di mettere la tua CHIAVE OPENAI NUOVA qui sotto
     const API_KEY = "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"; 
     
-    emailjs.init("Jlm5ZEzPEoWKBx3ki"); // Il tuo ID pubblico corretto
+    // Inizializzazione con la tua Public Key
+    emailjs.init("Jlm5ZEzPEoWKBx3ki");
 
-    // Variabili meteo
-    let meteoAttuale = "non disponibile";
-    let tempAttuale = "--";
+    let temp = "--";
+    let desc = "Variabile";
 
-    // --- 2. FUNZIONE METEO AUTOMATICA ---
     async function getMeteo() {
         try {
-            const res = await fetch("https://api.openweathermap.org/data/2.5/weather?q=Imperia,IT&appid=f1cdab2eef339087f342360bdd4958cf&units=metric&lang=it");
-            const data = await res.json();
-            tempAttuale = Math.round(data.main.temp);
-            meteoAttuale = data.weather[0].description;
-            document.getElementById('temp').innerText = tempAttuale + "°C";
-            document.getElementById('desc').innerText = meteoAttuale;
-        } catch(e) { console.log("Errore meteo"); }
+            const r = await fetch("https://api.openweathermap.org/data/2.5/weather?q=Imperia,IT&appid=f1cdab2eef339087f342360bdd4958cf&units=metric&lang=it");
+            const d = await r.json();
+            temp = Math.round(d.main.temp) + "°C";
+            desc = d.weather[0].description;
+            document.getElementById('t').innerText = temp;
+            document.getElementById('w-desc').innerText = desc;
+        } catch(e) {}
     }
-    getMeteo(); // Avvia subito il meteo
+    getMeteo();
 
-    // --- 3. FUNZIONE AI (CHAT) ---
-    async function inviaDomanda() {
-        const input = document.getElementById('question');
-        const output = document.getElementById('ai-response');
-        const testo = input.value;
-        if(!testo) return;
-
-        output.innerHTML = "<em>Sto pensando...</em>";
-        input.value = ""; // Pulisci campo
-
-        // Prompt di sistema intelligente
-        const sistema = `Sei l'AI Concierge del fotografo Massimiliano Cossu a Imperia.
-        Meteo attuale: ${tempAttuale}°C, ${meteoAttuale}.
-        
-        REGOLE:
-        - Se piove/coperto: Consiglia i "Portici di Oneglia" (luce morbida, riparati).
-        - Se c'è sole: Consiglia il "Parrasio" (vicoli storici) o "Borgo Foce" (mare).
-        - Outfit: Elegante, colori neutri (lino, beige, bianco).
-        - Tono: Professionale, sintetico (max 2 frasi).`;
+    async function runAI() {
+        const input = document.getElementById('user-in');
+        const display = document.getElementById('display');
+        const btn = document.getElementById('ai-btn');
+        if(!input.value) return;
+        const text = input.value;
+        input.value = ""; btn.disabled = true;
+        display.innerHTML = "<strong>AI:</strong> <em>Sto analizzando la luce...</em>";
 
         try {
-            const response = await fetch("https://api.openai.com/v1/chat/completions", {
+            const r = await fetch("https://api.openai.com/v1/chat/completions", {
                 method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    "Authorization": "Bearer " + API_KEY
-                },
+                headers: { "Content-Type": "application/json", "Authorization": `Bearer ${API_KEY}` },
                 body: JSON.stringify({
-                    model: "gpt-4o-mini", // Modello veloce ed economico
+                    model: "gpt-4o-mini",
                     messages: [
-                        { role: "system", content: sistema },
-                        { role: "user", content: testo }
+                        { role: "system", content: `Sei l'AI Concierge di Massimiliano Cossu a Imperia. Meteo: ${temp}, ${desc}. Se piove/coperto consiglia i Portici di Oneglia. Se sole Parrasio o Foce. Stile elegante, max 3 frasi.` },
+                        { role: "user", content: text }
                     ]
                 })
             });
-
-            const data = await response.json();
-            
-            if(data.error) {
-                output.innerHTML = "Errore Chiave API: Controlla di aver messo quella nuova.";
-            } else {
-                output.innerHTML = "<strong>AI:</strong> " + data.choices[0].message.content;
-            }
-
-        } catch(err) {
-            output.innerHTML = "Errore di connessione.";
-        }
+            const data = await r.json();
+            display.innerHTML = `<strong>AI:</strong> ${data.choices[0].message.content}`;
+        } catch(e) { display.innerHTML = "Errore AI."; }
+        finally { btn.disabled = false; }
     }
 
-    // --- 4. FUNZIONE INVIO EMAIL (EmailJS) ---
-    document.getElementById('contact-form').addEventListener('submit', function(e) {
+    function ask(txt) { document.getElementById('user-in').value = txt; runAI(); }
+
+    // --- LOGICA EMAILJS ---
+    document.getElementById('contact-form').onsubmit = function(e) {
         e.preventDefault();
         const btn = document.getElementById('sb');
         btn.innerText = "ATTENDERE...";
-        
+        btn.disabled = true;
+
         const params = {
             from_name: document.getElementById('fn').value,
             name: document.getElementById('fn').value,
             email: document.getElementById('em').value,
             phone: document.getElementById('ph').value,
             room_number: document.getElementById('rn').value,
-            notes: document.getElementById('nt').value,
-            requested_time: "Da Web App"
+            notes: document.getElementById('nt').value
         };
 
+        // NOTA: Se ricevi errore, controlla che "default_service" sia corretto nel tuo pannello
         emailjs.send("default_service", "template_liqxtir", params)
-        .then(function() {
-            alert("Inviato con successo!");
-            btn.innerText = "INVIATO";
-        }, function(error) {
-            alert("Errore: " + JSON.stringify(error));
-            btn.innerText = "Riprova";
-        });
-    });
+            .then(() => { 
+                alert("Inviato con successo!"); 
+                location.reload(); 
+            })
+            .catch((err) => {
+                alert("Errore EmailJS: " + JSON.stringify(err));
+                btn.innerText = "INVIA RICHIESTA";
+                btn.disabled = false;
+            });
+    };
 </script>
-
 </body>
 </html>
