@@ -1,59 +1,39 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Massimiliano Cossu | AI Concierge</title>
     <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600&display=swap" rel="stylesheet">
     <style>
-        :root { --b: #000; --w: #fff; --g: #f4f4f4; }
+        :root { --b: #000; --w: #fff; }
         body { font-family: 'Montserrat', sans-serif; background: var(--w); color: var(--b); margin: 0; padding: 0; text-align: center; }
         .container { max-width: 450px; margin: 0 auto; padding: 20px; box-sizing: border-box; }
-        
-        /* SELETTORE LINGUA */
-        .lang-bar { display: flex; justify-content: center; gap: 15px; margin-bottom: 20px; padding: 10px; }
-        .lang-btn { cursor: pointer; background: none; border: none; font-size: 0.7rem; font-weight: 600; color: #ccc; text-transform: uppercase; letter-spacing: 1px; }
+        .lang-bar { display: flex; justify-content: center; gap: 15px; margin-bottom: 20px; }
+        .lang-btn { cursor: pointer; background: none; border: none; font-size: 0.7rem; font-weight: 600; color: #ccc; text-transform: uppercase; }
         .lang-btn.active { color: var(--b); border-bottom: 2px solid var(--b); }
-
         .logo { width: 140px; margin: 10px 0; }
         .brand { letter-spacing: 5px; text-transform: uppercase; font-size: 0.75rem; margin-bottom: 30px; }
-        
         .weather-box { border-top: 1px solid #eee; border-bottom: 1px solid #eee; padding: 15px 0; margin-bottom: 30px; }
         .temp { font-size: 2.5rem; font-weight: 200; }
-        #w-desc { font-size: 0.6rem; text-transform: uppercase; color: #666; }
-
         .ai-box { text-align: left; padding: 20px; background: #fafafa; border-left: 4px solid var(--b); margin-bottom: 30px; }
-        #display { font-size: 0.85rem; line-height: 1.6; min-height: 60px; margin-bottom: 20px; color: #333; }
-        
+        #display { font-size: 0.85rem; line-height: 1.6; min-height: 60px; margin-bottom: 20px; }
         .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px; }
-        .m-btn { background: #fff; border: 1px solid #ddd; padding: 12px; font-size: 0.6rem; text-transform: uppercase; cursor: pointer; font-family: inherit; }
-        
+        .m-btn { background: #fff; border: 1px solid #ddd; padding: 12px; font-size: 0.6rem; text-transform: uppercase; cursor: pointer; }
         .in-wrap { display: flex; gap: 10px; border-top: 1px solid #eee; padding-top: 15px; }
-        input#user-in { flex: 1; border: none; outline: none; background: transparent; font-family: inherit; font-size: 0.85rem; }
-        
-        .f-title { font-size: 0.75rem; font-weight: 600; letter-spacing: 3px; margin: 30px 0 20px; text-transform: uppercase; }
-        .field { width: 100%; padding: 15px 0; margin-bottom: 10px; border: none; border-bottom: 1px solid #eee; outline: none; font-family: inherit; font-size: 0.9rem; box-sizing: border-box; }
-        .btn-send { width: 100%; padding: 20px; background: var(--b); color: var(--w); border: none; text-transform: uppercase; letter-spacing: 3px; cursor: pointer; font-weight: 600; }
+        input#user-in { flex: 1; border: none; outline: none; background: transparent; font-size: 0.85rem; }
+        .field { width: 100%; padding: 15px 0; margin-bottom: 10px; border: none; border-bottom: 1px solid #eee; outline: none; font-family: inherit; box-sizing: border-box; }
+        .btn-send { width: 100%; padding: 20px; background: var(--b); color: var(--w); border: none; text-transform: uppercase; letter-spacing: 3px; cursor: pointer; }
     </style>
 </head>
 <body>
-
 <div class="container">
     <div class="lang-bar">
         <button id="it-btn" class="lang-btn active" onclick="setL('it')">IT</button>
         <button id="en-btn" class="lang-btn" onclick="setL('en')">EN</button>
     </div>
-
-    <img src="logo.jpg" class="logo">
-    <div class="brand">Massimiliano Cossu</div>
-
-    <div class="weather-box">
-        <div id="loc-text" style="font-size:0.5rem; color:#999; letter-spacing:2px; margin-bottom: 5px;">IMPERIA, ITALY</div>
-        <div class="temp" id="t">--°C</div>
-        <div id="w-desc">Analisi...</div>
-    </div>
-
+    <img src="logo.jpg" class="logo"><div class="brand">Massimiliano Cossu</div>
+    <div class="weather-box"><div class="temp" id="t">--°C</div><div id="w-desc" style="font-size:0.6rem; text-transform:uppercase;">...</div></div>
     <div class="ai-box">
         <div id="display"></div>
         <div class="grid">
@@ -62,80 +42,74 @@
             <button class="m-btn" onclick="ask(t[cL].q3)" id="btn3"></button>
             <button class="m-btn" onclick="ask(t[cL].q4)" id="btn4"></button>
         </div>
-        <div class="in-wrap">
-            <input type="text" id="user-in">
-            <button onclick="runAI()" id="ai-btn" style="border:none; background:none; font-weight:600; cursor:pointer;">OK</button>
-        </div>
+        <div class="in-wrap"><input type="text" id="user-in"><button onclick="runAI()" style="border:none; background:none; font-weight:600; cursor:pointer;">OK</button></div>
     </div>
-
-    <div class="f-title" id="f-t"></div>
     <form id="c-form">
         <input type="text" id="fn" class="field" required>
         <input type="email" id="em" class="field" required>
         <input type="tel" id="ph" class="field" required>
         <input type="text" id="rn" class="field" required>
-        <textarea id="nt" class="field" style="height:60px; resize:none;"></textarea>
+        <textarea id="nt" class="field" style="height:60px;" placeholder="NOTES"></textarea>
         <button type="submit" class="btn-send" id="sb"></button>
     </form>
 </div>
-
 <script>
-    // --- CONFIGURAZIONE ---
     const AK = "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"; 
     emailjs.init("Jlm5ZEzPEoWKBx3ki");
-
-    let cL = 'it';
-    let curT = "--";
-    let curD = "";
-
+    let cL = 'it', curT = "--", curD = "";
     const t = {
         it: {
-            wel: "<strong>AI:</strong> Ciao! Sono l'assistente di Massimiliano. Come posso aiutarti oggi?",
-            fT: "Richiedi Disponibilità", bS: "Invia Richiesta", wait: "Sto analizzando la luce...",
-            success: "Richiesta inviata!", ph: "Chiedimi qualcosa...",
-            fn: "NOME E COGNOME", em: "EMAIL", tel: "TELEFONO", rm: "CAMERA / HOTEL", nt: "NOTE",
-            q1: "Location ideale", q2: "Outfit consigliato", q3: "Orario migliore", q4: "Il tuo stile"
+            wel: "Ciao! Sono l'assistente di Massimiliano. Come posso aiutarti?",
+            bS: "Invia Richiesta", wait: "Analizzo...", success: "Inviato!", ph: "Scrivi...",
+            fn: "NOME", em: "EMAIL", tel: "TELEFONO", rm: "CAMERA", q1: "Location", q2: "Outfit", q3: "Orario", q4: "Stile"
         },
         en: {
-            wel: "<strong>AI:</strong> Hello! I am Massimiliano's assistant. How can I help you today?",
-            fT: "Request Availability", bS: "Send Request", wait: "Analyzing the light...",
-            success: "Request sent!", ph: "Ask me anything...",
-            fn: "FULL NAME", em: "EMAIL", tel: "PHONE", rm: "ROOM / HOTEL", nt: "NOTES",
-            q1: "Ideal location", q2: "Recommended outfit", q3: "Best time", q4: "Your style"
+            wel: "Hello! I am Massimiliano's assistant. How can I help you?",
+            bS: "Send Request", wait: "Analyzing...", success: "Sent!", ph: "Type...",
+            fn: "NAME", em: "EMAIL", tel: "PHONE", rm: "ROOM", q1: "Location", q2: "Outfit", q3: "Time", q4: "Style"
         }
     };
-
     function setL(l) {
         cL = l;
-        document.getElementById('it-btn').className = 'lang-btn' + (l=='it'?' active':'');
-        document.getElementById('en-btn').className = 'lang-btn' + (l=='en'?' active':'');
+        document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
+        document.getElementById(l+'-btn').classList.add('active');
         document.getElementById('display').innerHTML = t[l].wel;
-        document.getElementById('f-t').innerText = t[l].fT;
         document.getElementById('sb').innerText = t[l].bS;
         document.getElementById('user-in').placeholder = t[l].ph;
         document.getElementById('fn').placeholder = t[l].fn;
         document.getElementById('em').placeholder = t[l].em;
         document.getElementById('ph').placeholder = t[l].tel;
         document.getElementById('rn').placeholder = t[l].rm;
-        document.getElementById('nt').placeholder = t[l].nt;
-        document.getElementById('btn1').innerText = "📍 " + t[l].q1;
-        document.getElementById('btn2').innerText = "👗 " + t[l].q2;
-        document.getElementById('btn3').innerText = "☀️ " + t[l].q3;
-        document.getElementById('btn4').innerText = "📸 " + t[l].q4;
+        ['btn1','btn2','btn3','btn4'].forEach((id, i) => document.getElementById(id).innerText = t[l]['q'+(i+1)]);
         getW();
     }
-
     async function getW() {
         try {
             const r = await fetch(`https://api.openweathermap.org/data/2.5/weather?q=Imperia,IT&appid=f1cdab2eef339087f342360bdd4958cf&units=metric&lang=${cL}`);
-            const d = await r.json();
-            curT = Math.round(d.main.temp) + "°C";
-            curD = d.weather[0].description;
-            document.getElementById('t').innerText = curT;
-            document.getElementById('w-desc').innerText = curD;
+            const d = await r.json(); curT = Math.round(d.main.temp)+"°C"; curD = d.weather[0].description;
+            document.getElementById('t').innerText = curT; document.getElementById('w-desc').innerText = curD;
         } catch(e) {}
     }
-
     async function runAI() {
-        const i = document.getElementById('user-in');
-        const d = document.getElementById('display');
+        const i = document.getElementById('user-in'), d = document.getElementById('display');
+        if(!i.value) return; const txt = i.value; i.value = ""; d.innerHTML = t[cL].wait;
+        try {
+            const r = await fetch("https://api.openai.com/v1/chat/completions", {
+                method: "POST", headers: { "Content-Type": "application/json", "Authorization": `Bearer ${AK}` },
+                body: JSON.stringify({ model: "gpt-4o-mini", messages: [{ role: "system", content: `Fotografo a Imperia. Meteo: ${curT}, ${curD}. Lingua: ${cL}. Rispondi max 2 frasi.` }, { role: "user", content: txt }] })
+            });
+            const res = await r.json(); d.innerHTML = res.choices[0].message.content;
+        } catch(e) { d.innerHTML = "Error."; }
+    }
+    function ask(q) { document.getElementById('user-in').value = q; runAI(); }
+    document.getElementById('c-form').onsubmit = function(e) {
+        e.preventDefault(); const b = document.getElementById('sb'); b.innerText = "...";
+        emailjs.send("default_service", "template_liqxtir", {
+            from_name: document.getElementById('fn').value, email: document.getElementById('em').value,
+            phone: document.getElementById('ph').value, room_number: document.getElementById('rn').value, notes: document.getElementById('nt').value
+        }).then(() => { alert(t[cL].success); location.reload(); }).catch(() => { alert("Error"); b.innerText = t[cL].bS; });
+    };
+    setL('it');
+</script>
+</body>
+</html>
