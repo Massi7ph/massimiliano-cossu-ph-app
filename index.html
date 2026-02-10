@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Massimiliano Cossu Concierge</title>
+    <title>Massimiliano Cossu | AI Concierge</title>
     <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600&display=swap" rel="stylesheet">
     <style>
@@ -18,15 +18,13 @@
         .weather-box { border-top: 1px solid #eee; border-bottom: 1px solid #eee; padding: 15px 0; margin-bottom: 30px; }
         .temp { font-size: 2.8rem; font-weight: 200; }
         .ai-box { text-align: left; padding: 20px; background: #fafafa; border-left: 4px solid var(--b); margin-bottom: 30px; }
-        #display { font-size: 0.9rem; line-height: 1.6; min-height: 60px; margin-bottom: 20px; }
+        #display { font-size: 0.85rem; line-height: 1.6; min-height: 80px; margin-bottom: 20px; color: #333; }
         .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px; }
         .m-btn { background: #fff; border: 1px solid #ddd; padding: 12px; font-size: 0.6rem; text-transform: uppercase; cursor: pointer; font-family: inherit; }
-        .m-active { background: var(--b) !important; color: var(--w) !important; }
         .in-wrap { display: flex; gap: 10px; border-top: 1px solid #eee; padding-top: 15px; }
         input#user-in { flex: 1; border: none; outline: none; background: transparent; font-family: inherit; font-size: 0.85rem; }
         .f-title { font-size: 0.75rem; font-weight: 600; letter-spacing: 3px; margin: 30px 0 20px; text-transform: uppercase; }
-        input.field, textarea.field { width: 100%; padding: 15px 0; margin-bottom: 10px; border: none; border-bottom: 1px solid #eee; outline: none; font-family: inherit; font-size: 0.9rem; }
-        textarea.field { height: 60px; resize: none; }
+        .field { width: 100%; padding: 15px 0; margin-bottom: 10px; border: none; border-bottom: 1px solid #eee; outline: none; font-family: inherit; font-size: 0.9rem; box-sizing: border-box; }
         .btn-send { width: 100%; padding: 20px; background: var(--b); color: var(--w); border: none; text-transform: uppercase; letter-spacing: 3px; cursor: pointer; font-weight: 600; }
     </style>
 </head>
@@ -38,104 +36,152 @@
         <button id="en-btn" class="lang-btn" onclick="setL('en')">English</button>
     </div>
 
-    <img src="logo.jpg" class="logo" alt="Logo">
+    <img src="logo.jpg" class="logo" alt="Massimiliano Cossu">
     <div class="brand">Massimiliano Cossu</div>
 
     <div class="weather-box">
-        <div style="font-size:0.5rem; color:#999; letter-spacing:2px;">IMPERIA, ITALY</div>
-        <div class="temp" id="t">18°C</div>
+        <div style="font-size:0.5rem; color:#999; letter-spacing:2px; margin-bottom: 5px;" id="user-loc">IMPERIA, ITALY</div>
+        <div class="temp" id="t">--°C</div>
+        <div id="w-desc" style="font-size:0.6rem; text-transform:uppercase; color:#666;">Analisi locale...</div>
     </div>
 
     <div class="ai-box">
-        <div id="display">Benvenuto. Scegli un Mood o chiedimi un consiglio.</div>
+        <div id="display"><strong>AI:</strong> Ciao! Sono l'assistente di Massimiliano.</div>
         <div class="grid">
-            <button class="m-btn" onclick="setM('it_r', 'en_r', this)" id="m1">🌹 Romantico</button>
-            <button class="m-btn" onclick="setM('it_e', 'en_e', this)" id="m2">🧥 Editoriale</button>
-            <button class="m-btn" onclick="setM('it_s', 'en_s', this)" id="m3">📸 Spontaneo</button>
-            <button class="m-btn" onclick="setM('it_f', 'en_f', this)" id="m4">👨‍👩‍👧 Family</button>
+            <button class="m-btn" onclick="quickAsk(t[cL].q1)" id="btn1">📍 Vicino a me</button>
+            <button class="m-btn" onclick="quickAsk(t[cL].q2)" id="btn2">👗 Outfit</button>
+            <button class="m-btn" onclick="quickAsk(t[cL].q3)" id="btn3">☀️ Orario migliore</button>
+            <button class="m-btn" onclick="quickAsk(t[cL].q4)" id="btn4">📸 Tuo stile</button>
         </div>
         <div class="in-wrap">
-            <input type="text" id="user-in" placeholder="Chiedi...">
-            <button onclick="runAI()" style="border:none; background:none; font-weight:600; cursor:pointer;">OK</button>
+            <input type="text" id="user-in" placeholder="...">
+            <button id="ai-btn" onclick="runAI()" style="border:none; background:none; font-weight:600; cursor:pointer;">OK</button>
         </div>
     </div>
 
     <div class="f-title" id="f-t">Richiedi Disponibilità</div>
     <form id="b-form">
-        <input type="text" id="fn" class="field" placeholder="NOME" required>
-        <input type="email" id="em" class="field" placeholder="EMAIL" required>
-        <input type="tel" id="ph" class="field" placeholder="TELEFONO" required>
-        <input type="text" id="rn" class="field" placeholder="CAMERA" required>
-        <textarea id="nt" class="field" placeholder="NOTE"></textarea>
-        <input type="hidden" id="sm" value="Nessuno">
+        <input type="text" id="fn" class="field" required>
+        <input type="email" id="em" class="field" required>
+        <input type="tel" id="ph" class="field" required>
+        <input type="text" id="rn" class="field" required>
+        <textarea id="nt" class="field" style="height:60px; resize:none;"></textarea>
         <button type="submit" class="btn-send" id="sb">Invia Richiesta</button>
     </form>
 </div>
 
 <script>
+    // --- CONFIGURAZIONE ---
     let cL = 'it';
+    let userCoords = "Imperia (Centro)";
+    let currentTemp = "--";
+    let currentCondition = "variabile";
+    const AK = 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; 
+    
     emailjs.init("Jlm5ZEzPEoWKBx3ki");
 
-    const msgs = {
-        it_r: "🌹 AI: Il Parrasio è perfetto al tramonto.",
-        en_r: "🌹 AI: Parrasio is perfect at sunset.",
-        it_e: "🧥 AI: Suggerisco i Portici di Oneglia.",
-        en_e: "🧥 AI: I suggest Oneglia's Arches.",
-        it_s: "📸 AI: Porto Maurizio per scatti naturali.",
-        en_s: "📸 AI: Porto Maurizio for natural shots.",
-        it_f: "👨‍👩‍👧 AI: Borgo Foce è l'ideale per i bambini.",
-        en_f: "👨‍👩‍👧 AI: Borgo Foce is ideal for families."
+    const t = {
+        it: {
+            wel: "<strong>AI:</strong> Ciao! Sono l'assistente di Massimiliano. Come posso aiutarti?",
+            fT: "Richiedi Disponibilità", bS: "Invia Richiesta", wait: "Sto analizzando luce e meteo...",
+            success: "Richiesta inviata!", phIn: "Chiedimi qualcosa...",
+            fn: "NOME E COGNOME", em: "EMAIL", ph: "TELEFONO", rn: "CAMERA / HOTEL", nt: "NOTE",
+            q1: "Cosa c'è di bello vicino a me?", q2: "Che outfit mi consigli oggi?", 
+            q3: "Qual è l'orario migliore per scattare?", q4: "Parlami del tuo stile"
+        },
+        en: {
+            wel: "<strong>AI:</strong> Hello! I'm Massimiliano's assistant. How can I help you?",
+            fT: "Request Availability", bS: "Send Request", wait: "Analyzing light and weather...",
+            success: "Request sent successfully!", phIn: "Ask me anything...",
+            fn: "FULL NAME", em: "EMAIL", ph: "PHONE", rn: "ROOM / HOTEL", nt: "NOTES",
+            q1: "What's interesting near me?", q2: "What outfit do you recommend today?", 
+            q3: "What's the best time to shoot?", q4: "Tell me about your style"
+        }
     };
 
     function setL(l) {
         cL = l;
         document.getElementById('it-btn').className = 'lang-btn' + (l=='it'?' active':'');
         document.getElementById('en-btn').className = 'lang-btn' + (l=='en'?' active':'');
-        document.getElementById('display').innerText = l=='it' ? "Scegli una categoria o chiedimi consiglio." : "Choose a category or ask for advice.";
+        document.getElementById('display').innerHTML = t[l].wel;
+        document.getElementById('f-t').innerText = t[l].fT;
+        document.getElementById('sb').innerText = t[l].bS;
+        document.getElementById('user-in').placeholder = t[l].phIn;
+        document.getElementById('fn').placeholder = t[l].fn;
+        document.getElementById('em').placeholder = t[l].em;
+        document.getElementById('ph').placeholder = t[l].ph;
+        document.getElementById('rn').placeholder = t[l].rn;
+        document.getElementById('nt').placeholder = t[l].nt;
+        document.getElementById('btn1').innerText = "📍 " + t[l].q1;
+        document.getElementById('btn2').innerText = "👗 " + t[l].q2;
+        document.getElementById('btn3').innerText = "☀️ " + t[l].q3;
+        document.getElementById('btn4').innerText = "📸 " + t[l].q4;
+        getW();
     }
 
-    function setM(it, en, btn) {
-        document.querySelectorAll('.m-btn').forEach(b => b.classList.remove('m-active'));
-        btn.classList.add('m-active');
-        document.getElementById('sm').value = cL == 'it' ? it : en;
-        document.getElementById('display').innerHTML = cL == 'it' ? msgs[it] : msgs[en];
-    }
-
-    function runAI() {
-        const val = document.getElementById('user-in').value.toLowerCase();
-        const d = document.getElementById('display');
-        if(val.includes("vest") || val.includes("wear")) {
-            d.innerHTML = "AI: Consiglio lino e colori neutri.";
-        } else {
-            d.innerHTML = "AI: Ottima idea! Ne parliamo durante la sessione.";
+    function getGeo() {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition((pos) => {
+                userCoords = `Lat: ${pos.coords.latitude}, Lon: ${pos.coords.longitude}`;
+            });
         }
     }
 
     async function getW() {
         try {
-            const res = await fetch('https://api.openweathermap.org/data/2.5/weather?q=Imperia,IT&appid=f1cdab2eef339087f342360bdd4958cf&units=metric');
-            const data = await res.json();
-            if(data.main) document.getElementById('t').innerText = Math.round(data.main.temp) + "°C";
-        } catch(e) { console.log("Weather error"); }
+            const r = await fetch(`https://api.openweathermap.org/data/2.5/weather?q=Imperia,IT&appid=f1cdab2eef339087f342360bdd4958cf&units=metric&lang=${cL}`);
+            const d = await r.json();
+            if(d.main) {
+                currentTemp = Math.round(d.main.temp) + "°C";
+                currentCondition = d.weather[0].description;
+                document.getElementById('t').innerText = currentTemp;
+                document.getElementById('w-desc').innerText = currentCondition;
+            }
+        } catch(e) {}
     }
+
+    async function runAI() {
+        const i = document.getElementById('user-in');
+        const d = document.getElementById('display');
+        const b = document.getElementById('ai-btn');
+        const text = i.value;
+        if(!text) return;
+        i.value = ""; b.disabled = true;
+        d.innerHTML = `<strong>AI:</strong> ${t[cL].wait}`;
+
+        try {
+            const r = await fetch("https://api.openai.com/v1/chat/completions", {
+                method: "POST",
+                headers: { "Content-Type": "application/json", "Authorization": `Bearer ${AK}` },
+                body: JSON.stringify({
+                    model: "gpt-4o-mini",
+                    messages: [
+                        { role: "system", content: `Sei l'AI Concierge di Massimiliano Cossu a Imperia. Meteo attuale: ${currentTemp}, ${currentCondition}. Posizione: ${userCoords}. Stile elegante. Se piove esalta i Portici di Oneglia. Suggerisci abiti in lino e colori neutri. Rispondi in ${cL} (max 3 frasi).` },
+                        { role: "user", content: text }
+                    ]
+                })
+            });
+            const data = await r.json();
+            d.innerHTML = `<strong>AI:</strong> ${data.choices[0].message.content}`;
+        } catch(e) { d.innerHTML = "Error."; }
+        finally { b.disabled = false; }
+    }
+
+    function quickAsk(q) { document.getElementById('user-in').value = q; runAI(); }
 
     document.getElementById('b-form').onsubmit = function(e) {
         e.preventDefault();
-        document.getElementById('sb').innerText = "...";
-        emailjs.send("default_service", "template_ua1pm9l", {
+        emailjs.send("default_service", "template_liqxtir", {
             from_name: document.getElementById('fn').value,
             email: document.getElementById('em').value,
             phone: document.getElementById('ph').value,
             room_number: document.getElementById('rn').value,
-            notes: document.getElementById('nt').value,
-            requested_time: document.getElementById('sm').value
-        }).then(() => {
-            alert("Inviato!");
-            location.reload();
-        });
+            notes: document.getElementById('nt').value + " [Posizione: " + userCoords + "]"
+        }).then(() => { alert(t[cL].success); location.reload(); });
     };
 
-    getW();
+    getGeo();
+    setL('it');
 </script>
 </body>
 </html>
