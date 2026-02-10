@@ -71,21 +71,19 @@
 </div>
 
 <script>
-    // --- CONFIGURAZIONE ---
+    // --- CONFIGURAZIONE CHIAVI ---
+    const AK = "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"; 
+    emailjs.init("Jlm5ZEzPEoWKBx3ki");
+
     let cL = 'it';
     let userCoords = "Imperia (Centro)";
     let currentTemp = "--";
     let currentCondition = "variabile";
-    
-    // INSERISCI QUI LA TUA CHIAVE OPENAI
-    const AK ="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"; 
-    
-    emailjs.init("Jlm5ZEzPEoWKBx3ki");
 
     const t = {
         it: {
             wel: "<strong>AI:</strong> Ciao! Sono l'assistente di Massimiliano. Come posso aiutarti?",
-            fT: "Richiedi Disponibilità", bS: "Invia Richiesta", wait: "Sto analizzando luce e meteo...",
+            fT: "Richiedi Disponibilità", bS: "Invia Richiesta", wait: "Analisi luce e meteo...",
             success: "Richiesta inviata!", phIn: "Chiedimi qualcosa...",
             fn: "NOME E COGNOME", em: "EMAIL", ph: "TELEFONO", rn: "CAMERA / HOTEL", nt: "NOTE",
             q1: "Cosa c'è di bello vicino a me?", q2: "Che outfit mi consigli oggi?", 
@@ -93,7 +91,7 @@
         },
         en: {
             wel: "<strong>AI:</strong> Hello! I'm Massimiliano's assistant. How can I help you?",
-            fT: "Request Availability", bS: "Send Request", wait: "Analyzing light and weather...",
+            fT: "Request Availability", bS: "Send Request", wait: "Analyzing light...",
             success: "Request sent successfully!", phIn: "Ask me anything...",
             fn: "FULL NAME", em: "EMAIL", ph: "PHONE", rn: "ROOM / HOTEL", nt: "NOTES",
             q1: "What's interesting near me?", q2: "What outfit do you recommend today?", 
@@ -119,14 +117,6 @@
         document.getElementById('btn3').innerText = "☀️ " + t[l].q3;
         document.getElementById('btn4').innerText = "📸 " + t[l].q4;
         getW();
-    }
-
-    function getGeo() {
-        if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition((pos) => {
-                userCoords = `Lat: ${pos.coords.latitude}, Lon: ${pos.coords.longitude}`;
-            });
-        }
     }
 
     async function getW() {
@@ -158,7 +148,7 @@
                 body: JSON.stringify({
                     model: "gpt-4o-mini",
                     messages: [
-                        { role: "system", content: `Sei l'AI Concierge di Massimiliano Cossu a Imperia. Meteo attuale: ${currentTemp}, ${currentCondition}. Posizione: ${userCoords}. Stile elegante. Se piove esalta i Portici di Oneglia perché sono coperti. Suggerisci abiti in lino e colori neutri. Rassicura i timidi: Massimiliano cattura l'essenza naturale. Rispondi in ${cL} (max 3 frasi).` },
+                        { role: "system", content: `Sei l'AI Concierge di Massimiliano Cossu a Imperia. Meteo: ${currentTemp}, ${currentCondition}. Stile elegante. Parrasio (Romantic), Portici (Editorial), Borgo Foce (Family). Se piove esalta i Portici. Suggerisci lino e colori neutri. Rispondi in ${cL} (max 3 frasi).` },
                         { role: "user", content: text }
                     ]
                 })
@@ -171,23 +161,32 @@
 
     function quickAsk(q) { document.getElementById('user-in').value = q; runAI(); }
 
+    // --- LOGICA EMAILJS (SINCRONIZZATA CON TEMPLATE LIQXTIR) ---
     document.getElementById('b-form').onsubmit = function(e) {
         e.preventDefault();
-        // Sincronizzato con il tuo template EmailJS "liqxtir"
+        const btn = document.getElementById('sb');
+        btn.innerText = "INVIANDO...";
+        btn.disabled = true;
+
         emailjs.send("default_service", "template_liqxtir", {
             from_name: document.getElementById('fn').value,
+            name: document.getElementById('fn').value, 
             email: document.getElementById('em').value,
             phone: document.getElementById('ph').value,
             room_number: document.getElementById('rn').value,
-            requested_time: "Interazione AI Meteo",
-            notes: document.getElementById('nt').value + " [Posizione rilevata: " + userCoords + "]"
-        }).then(() => { alert(t[cL].success); location.reload(); });
+            requested_time: "Richiesta da AI Concierge",
+            notes: document.getElementById('nt').value
+        }).then(() => { 
+            alert(t[cL].success); 
+            location.reload(); 
+        }).catch((err) => {
+            alert("Errore invio. Riprova.");
+            btn.innerText = "INVIA RICHIESTA";
+            btn.disabled = false;
+        });
     };
 
-    getGeo();
     setL('it');
 </script>
 </body>
 </html>
-
-
