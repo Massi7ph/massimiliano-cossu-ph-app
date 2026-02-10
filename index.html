@@ -76,7 +76,9 @@
     let userCoords = "Imperia (Centro)";
     let currentTemp = "--";
     let currentCondition = "variabile";
-    const AK = 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; 
+    
+    // INSERISCI QUI LA TUA CHIAVE OPENAI
+    const AK =5BENLUFCzJW7omjKuYA79klkm1X8vp2wZRdtpeeEylMZfy-AH2QANPxhIKGDG-QSWKOY5B4lEIT3BlbkFJJA3d7ZiFSesgR7TkZo_7TnLKPB1HzEjstmFMouPvwyraMq4ngPIhh1jes4T04CBf_hhuhvCQ8A; 
     
     emailjs.init("Jlm5ZEzPEoWKBx3ki");
 
@@ -156,7 +158,7 @@
                 body: JSON.stringify({
                     model: "gpt-4o-mini",
                     messages: [
-                        { role: "system", content: `Sei l'AI Concierge di Massimiliano Cossu a Imperia. Meteo attuale: ${currentTemp}, ${currentCondition}. Posizione: ${userCoords}. Stile elegante. Se piove esalta i Portici di Oneglia. Suggerisci abiti in lino e colori neutri. Rispondi in ${cL} (max 3 frasi).` },
+                        { role: "system", content: `Sei l'AI Concierge di Massimiliano Cossu a Imperia. Meteo attuale: ${currentTemp}, ${currentCondition}. Posizione: ${userCoords}. Stile elegante. Se piove esalta i Portici di Oneglia perché sono coperti. Suggerisci abiti in lino e colori neutri. Rassicura i timidi: Massimiliano cattura l'essenza naturale. Rispondi in ${cL} (max 3 frasi).` },
                         { role: "user", content: text }
                     ]
                 })
@@ -171,12 +173,14 @@
 
     document.getElementById('b-form').onsubmit = function(e) {
         e.preventDefault();
+        // Sincronizzato con il tuo template EmailJS "liqxtir"
         emailjs.send("default_service", "template_liqxtir", {
             from_name: document.getElementById('fn').value,
             email: document.getElementById('em').value,
             phone: document.getElementById('ph').value,
             room_number: document.getElementById('rn').value,
-            notes: document.getElementById('nt').value + " [Posizione: " + userCoords + "]"
+            requested_time: "Interazione AI Meteo",
+            notes: document.getElementById('nt').value + " [Posizione rilevata: " + userCoords + "]"
         }).then(() => { alert(t[cL].success); location.reload(); });
     };
 
