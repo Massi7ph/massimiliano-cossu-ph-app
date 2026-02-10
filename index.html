@@ -40,60 +40,58 @@
     <div class="brand">Massimiliano Cossu</div>
 
     <div class="weather-box">
-        <div style="font-size:0.5rem; color:#999; letter-spacing:2px; margin-bottom: 5px;" id="user-loc">IMPERIA, ITALY</div>
-        <div class="temp" id="t">--°C</div>
-        <div id="w-desc" style="font-size:0.6rem; text-transform:uppercase; color:#666;">Analisi locale...</div>
+        <div id="user-loc" style="font-size:0.5rem; color:#999; letter-spacing:2px; margin-bottom: 5px;">IMPERIA, ITALY</div>
+        <div class="temp" id="t">8°C</div>
+        <div id="w-desc" style="font-size:0.6rem; text-transform:uppercase; color:#666;">CIELO COPERTO</div>
     </div>
 
     <div class="ai-box">
-        <div id="display"><strong>AI:</strong> Ciao! Sono l'assistente di Massimiliano.</div>
+        <div id="display"><strong>AI:</strong> Ciao! Sono l'assistente di Massimiliano. Come posso aiutarti?</div>
         <div class="grid">
-            <button class="m-btn" onclick="quickAsk(t[cL].q1)" id="btn1">📍 Vicino a me</button>
-            <button class="m-btn" onclick="quickAsk(t[cL].q2)" id="btn2">👗 Outfit</button>
-            <button class="m-btn" onclick="quickAsk(t[cL].q3)" id="btn3">☀️ Orario migliore</button>
-            <button class="m-btn" onclick="quickAsk(t[cL].q4)" id="btn4">📸 Tuo stile</button>
+            <button class="m-btn" onclick="quickAsk(t[cL].q1)" id="btn1">📍 VICINO A ME</button>
+            <button class="m-btn" onclick="quickAsk(t[cL].q2)" id="btn2">👗 OUTFIT</button>
+            <button class="m-btn" onclick="quickAsk(t[cL].q3)" id="btn3">☀️ ORARIO MIGLIORE</button>
+            <button class="m-btn" onclick="quickAsk(t[cL].q4)" id="btn4">📸 TUO STILE</button>
         </div>
         <div class="in-wrap">
-            <input type="text" id="user-in" placeholder="...">
+            <input type="text" id="user-in" placeholder="Chiedimi qualcosa...">
             <button id="ai-btn" onclick="runAI()" style="border:none; background:none; font-weight:600; cursor:pointer;">OK</button>
         </div>
     </div>
 
-    <div class="f-title" id="f-t">Richiedi Disponibilità</div>
+    <div class="f-title" id="f-t">RICHIEDI DISPONIBILITÀ</div>
     <form id="b-form">
-        <input type="text" id="fn" class="field" required>
-        <input type="email" id="em" class="field" required>
-        <input type="tel" id="ph" class="field" required>
-        <input type="text" id="rn" class="field" required>
-        <textarea id="nt" class="field" style="height:60px; resize:none;"></textarea>
-        <button type="submit" class="btn-send" id="sb">Invia Richiesta</button>
+        <input type="text" id="fn" class="field" placeholder="NOME E COGNOME" required>
+        <input type="email" id="em" class="field" placeholder="EMAIL" required>
+        <input type="tel" id="ph" class="field" placeholder="TELEFONO" required>
+        <input type="text" id="rn" class="field" placeholder="CAMERA / HOTEL" required>
+        <textarea id="nt" class="field" style="height:60px; resize:none;" placeholder="NOTE"></textarea>
+        <button type="submit" class="btn-send" id="sb">INVIA RICHIESTA</button>
     </form>
 </div>
 
 <script>
     // --- CONFIGURAZIONE CHIAVI ---
-    const AK = "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"; 
+    const AK = "sk-proj-wDAZb25R_S4M53JjVWvdNkxW_N4bJ3J0SRbevej4xZKUNRXDuI9o_P-UdvqYeSHPF-Vh2Spm5_jT3B1bkFJI rwxLmzIso2Ym5yjG-_Pe2EVPDmB3dbB1G1Ic Lxd5VXXY-e-eZGxkAhvj3A40UgY-dwxRw178A"; 
+    
     emailjs.init("Jlm5ZEzPEoWKBx3ki");
 
     let cL = 'it';
-    let userCoords = "Imperia (Centro)";
-    let currentTemp = "--";
-    let currentCondition = "variabile";
+    let currentTemp = "8°C";
+    let currentCondition = "cielo coperto";
 
     const t = {
         it: {
             wel: "<strong>AI:</strong> Ciao! Sono l'assistente di Massimiliano. Come posso aiutarti?",
-            fT: "Richiedi Disponibilità", bS: "Invia Richiesta", wait: "Analisi luce e meteo...",
-            success: "Richiesta inviata!", phIn: "Chiedimi qualcosa...",
-            fn: "NOME E COGNOME", em: "EMAIL", ph: "TELEFONO", rn: "CAMERA / HOTEL", nt: "NOTE",
+            fT: "RICHIEDI DISPONIBILITÀ", bS: "INVIA RICHIESTA", wait: "Analisi luce e meteo...",
+            success: "Richiesta inviata! Ti contatterò presto.", 
             q1: "Cosa c'è di bello vicino a me?", q2: "Che outfit mi consigli oggi?", 
             q3: "Qual è l'orario migliore per scattare?", q4: "Parlami del tuo stile"
         },
         en: {
             wel: "<strong>AI:</strong> Hello! I'm Massimiliano's assistant. How can I help you?",
-            fT: "Request Availability", bS: "Send Request", wait: "Analyzing light...",
-            success: "Request sent successfully!", phIn: "Ask me anything...",
-            fn: "FULL NAME", em: "EMAIL", ph: "PHONE", rn: "ROOM / HOTEL", nt: "NOTES",
+            fT: "REQUEST AVAILABILITY", bS: "SEND REQUEST", wait: "Analyzing light...",
+            success: "Request sent! I will contact you soon.",
             q1: "What's interesting near me?", q2: "What outfit do you recommend today?", 
             q3: "What's the best time to shoot?", q4: "Tell me about your style"
         }
@@ -106,39 +104,18 @@
         document.getElementById('display').innerHTML = t[l].wel;
         document.getElementById('f-t').innerText = t[l].fT;
         document.getElementById('sb').innerText = t[l].bS;
-        document.getElementById('user-in').placeholder = t[l].phIn;
-        document.getElementById('fn').placeholder = t[l].fn;
-        document.getElementById('em').placeholder = t[l].em;
-        document.getElementById('ph').placeholder = t[l].ph;
-        document.getElementById('rn').placeholder = t[l].rn;
-        document.getElementById('nt').placeholder = t[l].nt;
-        document.getElementById('btn1').innerText = "📍 " + t[l].q1;
-        document.getElementById('btn2').innerText = "👗 " + t[l].q2;
-        document.getElementById('btn3').innerText = "☀️ " + t[l].q3;
-        document.getElementById('btn4').innerText = "📸 " + t[l].q4;
-        getW();
-    }
-
-    async function getW() {
-        try {
-            const r = await fetch(`https://api.openweathermap.org/data/2.5/weather?q=Imperia,IT&appid=f1cdab2eef339087f342360bdd4958cf&units=metric&lang=${cL}`);
-            const d = await r.json();
-            if(d.main) {
-                currentTemp = Math.round(d.main.temp) + "°C";
-                currentCondition = d.weather[0].description;
-                document.getElementById('t').innerText = currentTemp;
-                document.getElementById('w-desc').innerText = currentCondition;
-            }
-        } catch(e) {}
+        document.getElementById('btn1').innerText = "📍 " + t[l].q1.toUpperCase();
+        document.getElementById('btn2').innerText = "👗 " + t[l].q2.toUpperCase();
+        document.getElementById('btn3').innerText = "☀️ " + t[l].q3.toUpperCase();
+        document.getElementById('btn4').innerText = "📸 " + t[l].q4.toUpperCase();
     }
 
     async function runAI() {
         const i = document.getElementById('user-in');
         const d = document.getElementById('display');
         const b = document.getElementById('ai-btn');
-        const text = i.value;
-        if(!text) return;
-        i.value = ""; b.disabled = true;
+        if(!i.value) return;
+        const text = i.value; i.value = ""; b.disabled = true;
         d.innerHTML = `<strong>AI:</strong> ${t[cL].wait}`;
 
         try {
@@ -148,42 +125,47 @@
                 body: JSON.stringify({
                     model: "gpt-4o-mini",
                     messages: [
-                        { role: "system", content: `Sei l'AI Concierge di Massimiliano Cossu a Imperia. Meteo: ${currentTemp}, ${currentCondition}. Stile elegante. Parrasio (Romantic), Portici (Editorial), Borgo Foce (Family). Se piove esalta i Portici. Suggerisci lino e colori neutri. Rispondi in ${cL} (max 3 frasi).` },
+                        { role: "system", content: `Sei l'AI Concierge di Massimiliano Cossu a Imperia. Meteo: ${currentTemp}, ${currentCondition}. Se piove suggerisci i Portici di Oneglia. Stile elegante, suggerisci lino e colori neutri. Rispondi in ${cL} (max 3 frasi).` },
                         { role: "user", content: text }
                     ]
                 })
             });
             const data = await r.json();
             d.innerHTML = `<strong>AI:</strong> ${data.choices[0].message.content}`;
-        } catch(e) { d.innerHTML = "Error."; }
+        } catch(e) { d.innerHTML = "Error AI."; }
         finally { b.disabled = false; }
     }
 
     function quickAsk(q) { document.getElementById('user-in').value = q; runAI(); }
 
-    // --- LOGICA EMAILJS (SINCRONIZZATA CON TEMPLATE LIQXTIR) ---
+    // --- LOGICA EMAILJS SINCRONIZZATA CON IL TUO TEMPLATE ---
     document.getElementById('b-form').onsubmit = function(e) {
         e.preventDefault();
         const btn = document.getElementById('sb');
         btn.innerText = "INVIANDO...";
         btn.disabled = true;
 
-        emailjs.send("default_service", "template_liqxtir", {
+        const params = {
             from_name: document.getElementById('fn').value,
-            name: document.getElementById('fn').value, 
+            name: document.getElementById('fn').value,
             email: document.getElementById('em').value,
             phone: document.getElementById('ph').value,
             room_number: document.getElementById('rn').value,
-            requested_time: "Richiesta da AI Concierge",
+            requested_time: "Richiesta da Web App",
             notes: document.getElementById('nt').value
-        }).then(() => { 
-            alert(t[cL].success); 
-            location.reload(); 
-        }).catch((err) => {
-            alert("Errore invio. Riprova.");
-            btn.innerText = "INVIA RICHIESTA";
-            btn.disabled = false;
-        });
+        };
+
+        emailjs.send("default_service", "template_liqxtir", params)
+            .then(() => { 
+                alert(t[cL].success); 
+                location.reload(); 
+            })
+            .catch((err) => {
+                alert("Errore invio EmailJS. Controlla la console.");
+                console.error("EmailJS Error:", err);
+                btn.innerText = t[cL].bS;
+                btn.disabled = false;
+            });
     };
 
     setL('it');
