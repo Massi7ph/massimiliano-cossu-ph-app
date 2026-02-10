@@ -138,37 +138,33 @@
 
     function quickAsk(q) { document.getElementById('user-in').value = q; runAI(); }
 
-    // --- LOGICA EMAILJS SINCRONIZZATA CON IL TUO TEMPLATE ---
+   // --- LOGICA EMAILJS SINCRONIZZATA ---
     document.getElementById('b-form').onsubmit = function(e) {
         e.preventDefault();
         const btn = document.getElementById('sb');
         btn.innerText = "INVIANDO...";
         btn.disabled = true;
 
+        // Questi nomi (a sinistra) devono essere IDENTICI ai {{tag}} nel tuo template EmailJS
         const params = {
-            from_name: document.getElementById('fn').value,
-            name: document.getElementById('fn').value,
-            email: document.getElementById('em').value,
-            phone: document.getElementById('ph').value,
-            room_number: document.getElementById('rn').value,
-            requested_time: "Richiesta da Web App",
-            notes: document.getElementById('nt').value
+            from_name: document.getElementById('fn').value,     // per {{from_name}}
+            name: document.getElementById('fn').value,          // per {{name}}
+            email: document.getElementById('em').value,         // per {{email}}
+            phone: document.getElementById('ph').value,         // per {{phone}}
+            room_number: document.getElementById('rn').value,   // per {{room_number}}
+            requested_time: "Richiesta da AI Concierge",        // per {{requested_time}}
+            notes: document.getElementById('nt').value          // per {{notes}}
         };
 
         emailjs.send("default_service", "template_liqxtir", params)
             .then(() => { 
-                alert(t[cL].success); 
+                alert("Richiesta inviata con successo! Massimiliano ti risponderà presto."); 
                 location.reload(); 
             })
             .catch((err) => {
-                alert("Errore invio EmailJS. Controlla la console.");
-                console.error("EmailJS Error:", err);
-                btn.innerText = t[cL].bS;
+                alert("Errore tecnico nell'invio. Riprova più tardi.");
+                console.error("Dettagli errore EmailJS:", err);
+                btn.innerText = "INVIA RICHIESTA";
                 btn.disabled = false;
             });
     };
-
-    setL('it');
-</script>
-</body>
-</html>
