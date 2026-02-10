@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
-    <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Massimiliano Cossu | AI Concierge</title>
     <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600&display=swap" rel="stylesheet">
@@ -19,11 +20,11 @@
         .ai-box { text-align: left; padding: 20px; background: #fafafa; border-left: 4px solid var(--b); margin-bottom: 30px; }
         #display { font-size: 0.85rem; line-height: 1.6; min-height: 60px; margin-bottom: 20px; }
         .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px; }
-        .m-btn { background: #fff; border: 1px solid #ddd; padding: 12px; font-size: 0.6rem; text-transform: uppercase; cursor: pointer; }
+        .m-btn { background: #fff; border: 1px solid #ddd; padding: 12px; font-size: 0.6rem; text-transform: uppercase; cursor: pointer; font-family: inherit; font-weight: 600; }
         .in-wrap { display: flex; gap: 10px; border-top: 1px solid #eee; padding-top: 15px; }
-        input#user-in { flex: 1; border: none; outline: none; background: transparent; font-size: 0.85rem; }
-        .field { width: 100%; padding: 15px 0; margin-bottom: 10px; border: none; border-bottom: 1px solid #eee; outline: none; font-family: inherit; box-sizing: border-box; }
-        .btn-send { width: 100%; padding: 20px; background: var(--b); color: var(--w); border: none; text-transform: uppercase; letter-spacing: 3px; cursor: pointer; }
+        input#user-in { flex: 1; border: none; outline: none; background: transparent; font-size: 0.85rem; font-family: inherit; }
+        .field { width: 100%; padding: 15px 0; margin-bottom: 10px; border: none; border-bottom: 1px solid #eee; outline: none; font-family: inherit; box-sizing: border-box; font-size: 0.9rem; }
+        .btn-send { width: 100%; padding: 20px; background: var(--b); color: var(--w); border: none; text-transform: uppercase; letter-spacing: 3px; cursor: pointer; font-weight: 600; margin-top: 20px; }
     </style>
 </head>
 <body>
@@ -49,26 +50,32 @@
         <input type="email" id="em" class="field" required>
         <input type="tel" id="ph" class="field" required>
         <input type="text" id="rn" class="field" required>
-        <textarea id="nt" class="field" style="height:60px;" placeholder="NOTES"></textarea>
+        <textarea id="nt" class="field" style="height:60px; resize:none;"></textarea>
         <button type="submit" class="btn-send" id="sb"></button>
     </form>
 </div>
+
 <script>
-    const AK = "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"; 
+    // --- CONFIGURAZIONE ---
+    const AK = "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"; // Riga 118
     emailjs.init("Jlm5ZEzPEoWKBx3ki");
+
     let cL = 'it', curT = "--", curD = "";
     const t = {
         it: {
             wel: "Ciao! Sono l'assistente di Massimiliano. Come posso aiutarti?",
-            bS: "Invia Richiesta", wait: "Analizzo...", success: "Inviato!", ph: "Scrivi...",
-            fn: "NOME", em: "EMAIL", tel: "TELEFONO", rm: "CAMERA", q1: "Location", q2: "Outfit", q3: "Orario", q4: "Stile"
+            bS: "Invia Richiesta", wait: "Analizzo la luce...", success: "Inviato con successo!", ph: "Scrivi qui...",
+            fn: "NOME E COGNOME", em: "EMAIL", tel: "TELEFONO", rm: "CAMERA / HOTEL", nt: "NOTE", 
+            q1: "Location ideale", q2: "Outfit consigliato", q3: "Orario migliore", q4: "Il tuo stile"
         },
         en: {
             wel: "Hello! I am Massimiliano's assistant. How can I help you?",
-            bS: "Send Request", wait: "Analyzing...", success: "Sent!", ph: "Type...",
-            fn: "NAME", em: "EMAIL", tel: "PHONE", rm: "ROOM", q1: "Location", q2: "Outfit", q3: "Time", q4: "Style"
+            bS: "Send Request", wait: "Analyzing light...", success: "Sent successfully!", ph: "Type here...",
+            fn: "FULL NAME", em: "EMAIL", tel: "PHONE", rm: "ROOM / HOTEL", nt: "NOTES", 
+            q1: "Ideal location", q2: "Recommended outfit", q3: "Best time", q4: "Your style"
         }
     };
+
     function setL(l) {
         cL = l;
         document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
@@ -80,9 +87,11 @@
         document.getElementById('em').placeholder = t[l].em;
         document.getElementById('ph').placeholder = t[l].tel;
         document.getElementById('rn').placeholder = t[l].rm;
+        document.getElementById('nt').placeholder = t[l].nt;
         ['btn1','btn2','btn3','btn4'].forEach((id, i) => document.getElementById(id).innerText = t[l]['q'+(i+1)]);
         getW();
     }
+
     async function getW() {
         try {
             const r = await fetch(`https://api.openweathermap.org/data/2.5/weather?q=Imperia,IT&appid=f1cdab2eef339087f342360bdd4958cf&units=metric&lang=${cL}`);
@@ -90,27 +99,41 @@
             document.getElementById('t').innerText = curT; document.getElementById('w-desc').innerText = curD;
         } catch(e) {}
     }
+
     async function runAI() {
         const i = document.getElementById('user-in'), d = document.getElementById('display');
         if(!i.value) return; const txt = i.value; i.value = ""; d.innerHTML = t[cL].wait;
         try {
             const r = await fetch("https://api.openai.com/v1/chat/completions", {
                 method: "POST", headers: { "Content-Type": "application/json", "Authorization": `Bearer ${AK}` },
-                body: JSON.stringify({ model: "gpt-4o-mini", messages: [{ role: "system", content: `Fotografo a Imperia. Meteo: ${curT}, ${curD}. Lingua: ${cL}. Rispondi max 2 frasi.` }, { role: "user", content: txt }] })
+                body: JSON.stringify({ 
+                    model: "gpt-4o-mini", 
+                    messages: [{ role: "system", content: `Sei l'AI di Massimiliano Cossu, fotografo a Imperia. Meteo: ${curT}, ${curD}. Rispondi in ${cL}. Se piove consiglia i Portici, se sole il Parrasio. Elegante e breve.` }, { role: "user", content: txt }] 
+                })
             });
             const res = await r.json(); d.innerHTML = res.choices[0].message.content;
-        } catch(e) { d.innerHTML = "Error."; }
+        } catch(e) { d.innerHTML = "Error AI. Check API Key."; }
     }
+
     function ask(q) { document.getElementById('user-in').value = q; runAI(); }
+
     document.getElementById('c-form').onsubmit = function(e) {
-        e.preventDefault(); const b = document.getElementById('sb'); b.innerText = "...";
+        e.preventDefault(); 
+        const b = document.getElementById('sb'); 
+        b.innerText = "..."; b.disabled = true;
         emailjs.send("service_p8nu1jg", "template_liqxtir", {
-            from_name: document.getElementById('fn').value, email: document.getElementById('em').value,
-            phone: document.getElementById('ph').value, room_number: document.getElementById('rn').value, notes: document.getElementById('nt').value
-        }).then(() => { alert(t[cL].success); location.reload(); }).catch(() => { alert("Error"); b.innerText = t[cL].bS; });
+            from_name: document.getElementById('fn').value, 
+            email: document.getElementById('em').value,
+            phone: document.getElementById('ph').value, 
+            room_number: document.getElementById('rn').value, 
+            notes: document.getElementById('nt').value
+        }).then(() => { 
+            alert(t[cL].success); location.reload(); 
+        }).catch((err) => { 
+            alert("EmailJS Error: " + err.text); b.innerText = t[cL].bS; b.disabled = false; 
+        });
     };
     setL('it');
 </script>
 </body>
 </html>
-
